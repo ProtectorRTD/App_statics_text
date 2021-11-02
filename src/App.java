@@ -1,24 +1,46 @@
 import java.awt.Color;
-
+import java.awt.event.ActionListener;
 import javax.swing.*;  
+import java.awt.event.*;
 public class App 
 {
-    private JFrame f;
-    JTextArea area;
-    JTextArea area_v2;
-    JScrollPane scroll;
-    JScrollPane scroll_v2;
+    private static JFrame f;
+    private JTextArea area;
+    private JTextArea area_v2;
+    private JScrollPane scroll;
+    private JScrollPane scroll_v2;
+    private JButton button_size;
     public static void main(String[] args) throws Exception 
     {
         new App();
 
     }
+    public static JFrame giveframe()
+    {
+        return f;
+    }
     private App()
     {
         initArea();
         initScroll();
+        initbutton();
         frame();
     }  
+    private void initbutton()
+    {
+        button_size = new JButton("Compare");
+        button_size.setBounds(300,100,100,50);
+        button_size.setEnabled(true);
+        button_size.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                //вызов из другого класса
+                Area area = new Area();
+                area.calculation();
+            }
+        });
+    }
     private void initArea()
     {
         area = new JTextArea(""); 
@@ -57,7 +79,7 @@ public class App
         f.setLocationRelativeTo(null);
         f.setLayout(null);  
         
-
+        f.add(button_size);
         f.add(scroll);        
         f.add(scroll_v2);
         
@@ -65,4 +87,3 @@ public class App
         f.setVisible(true);  
     }
 }
-
