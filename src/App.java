@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import javax.swing.*;  
 import java.awt.event.*;
-public class App 
+public class App
 {
     private static JFrame f;
     private JTextArea area;
@@ -10,17 +10,18 @@ public class App
     private JScrollPane scroll;
     private JScrollPane scroll_v2;
     private JButton button_size;
-    public static void main(String[] args) throws Exception 
-    {
-        new App();
+    private String textfirst;
+    private String textsecond;
 
-    }
-    public static JFrame giveframe()
+    private Area area_class;
+    //private Area area_class; типо так сделать Денис?
+    public JFrame giveframe()
     {
         return f;
     }
-    private App()
+    public App()
     {
+        area_class = new Area(this);
         initArea();
         initScroll();
         initbutton();
@@ -36,8 +37,8 @@ public class App
             public void actionPerformed(ActionEvent e)
             {
                 //вызов из другого класса
-                Area area = new Area();
-                area.calculation();
+                text();
+                area_class.calculation();
             }
         });
     }
@@ -47,10 +48,24 @@ public class App
         area.setLineWrap(true);  //для переноса на следующую строку
         area.setBounds(100,200, 200,200);  
 
-
         area_v2 = new JTextArea(""); 
         area_v2.setLineWrap(true);  //для переноса на следующую строку
         area_v2.setBounds(400,200, 200,200); 
+
+        text();
+    }
+    private void text()
+    {
+        textfirst = area.getText();
+        textsecond = area_v2.getText();
+    }
+    public String getFirst()
+    {
+        return textfirst;
+    }
+    public String getSecond()
+    {
+        return textsecond;
     }
     private void initScroll() 
     {
