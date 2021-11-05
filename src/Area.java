@@ -16,11 +16,12 @@ public class Area
     private String secondText;
     private App app;
     private boolean to_the_end;
+    private JTextArea area;
     public Area(App app)
     {
         this.app = app;
     }
-    public void calculation()
+    public void calculation(JTextArea area)
     {
         // 1) Три самых популярных слова
         // 2) Самая часта буква
@@ -37,7 +38,7 @@ public class Area
         // 13) Количество родов слов
         // 14) Количество символов
 
-
+        this.area = area;
         firstText = app.getFirst();
         secondText = app.getSecond();
         popularWord();
@@ -49,9 +50,10 @@ public class Area
     }
     private void popularWord()
     {
+        // написать регулярку которая будет удалять все знаки ascii таблицы, чтобы были разные, а ещё чтобы все сводила к маленькой букве
         HashMap<String, Integer> hash_map = new HashMap<String, Integer>(); //создается карта 
         int count = 0; // счетчик для того чтобы считать какой раз уже записывалось 
-        String[] word = firstText.split(" "); //разделить весь инпут по пробелам 
+        String[] word = (firstText.toLowerCase()).split(" "); //разделить весь инпут по пробелам 
         for(int i = 0; i < word.length; i++) // пройтись циклом по всему массиву
         {                
             if(hash_map.containsKey(word[i]) == true) 
@@ -68,11 +70,15 @@ public class Area
         Map<String, Integer> hash_map_after_sorting = sortByValue(hash_map); // спизженая функция которая сортирует по ключам 
         String [] arr = hash_map_after_sorting.keySet().toArray(new String [0]); // из хэш мапы делаем в массив
         int start = arr.length - 1;
+        this.area.setText("Топ 3 слова - ");
         for(int i  = arr.length-1; i>=0; i--) //вывод наше все!
         {
             if(start+4 == arr.length) break;
             if(i < 0 ) break;
-            if(arr[i] != " ")System.out.println(arr[i]);
+            if(arr[i] != " ")
+            {                
+                this.area.append(arr[i] + " ");
+            }
             start--;
         }
         //System.out.println(hash_map);
