@@ -38,7 +38,7 @@ public class App
             {
                 //вызов из другого класса
                 text();
-                area_class.calculation();
+                area_class.calculation(area_v2);
             }
         });
     }
@@ -50,7 +50,7 @@ public class App
 
         area_v2 = new JTextArea(""); 
         area_v2.setLineWrap(true);  //для переноса на следующую строку
-        area_v2.setBounds(400,200, 200,400); 
+        area_v2.setBounds(400,200, 250,500); 
 
         text();
     }
@@ -82,7 +82,7 @@ public class App
 
         scroll_v2.getViewport().setBackground(Color.white);
         scroll_v2.getViewport().add(area_v2);
-        scroll_v2.setBounds(400,200, 200,400);
+        scroll_v2.setBounds(400,200, 250,500); 
     }
     private void frame()
     {
