@@ -1,11 +1,14 @@
 import java.security.KeyStore.Entry;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.*;  
 
@@ -50,14 +53,18 @@ public class Area
     }
     private void popularWord()
     {
-        // написать регулярку которая будет удалять все знаки ascii таблицы, чтобы были разные, а ещё чтобы все сводила к маленькой букве
+        //привет как дела фиксить
+        //чтобы ещё выводил сколько раз его использовали хм
         HashMap<String, Integer> hash_map = new HashMap<String, Integer>(); //создается карта 
         int count = 0; // счетчик для того чтобы считать какой раз уже записывалось 
-        String[] word = (firstText.toLowerCase()).split(" "); //разделить весь инпут по пробелам 
+        firstText = firstText.replaceAll("[^a-zA-Z0-9]"," ");
+        firstText = firstText.replace("  ", " ");
+        String[] word = firstText.split(" "); //разделить весь инпут по пробелам 
         for(int i = 0; i < word.length; i++) // пройтись циклом по всему массиву
         {                
             if(hash_map.containsKey(word[i]) == true) 
             {
+                    //создать функцию которая не будет записывать какие-то частицы
                     count = hash_map.get(word[i]);
                     count++;
                     hash_map.replace(word[i], count); // заменять с таким же на 1 больше, было 2 раза а станет 3
@@ -69,6 +76,8 @@ public class Area
         }
         Map<String, Integer> hash_map_after_sorting = sortByValue(hash_map); // спизженая функция которая сортирует по ключам 
         String [] arr = hash_map_after_sorting.keySet().toArray(new String [0]); // из хэш мапы делаем в массив
+        // String[] values =hash_map_after_sorting.values().toArray(new String[0]);
+        Integer[] values = (hash_map_after_sorting.values().toArray(new Integer[hash_map.values().size()]));
         int start = arr.length - 1;
         this.area.setText("Топ 3 слова - ");
         for(int i  = arr.length-1; i>=0; i--) //вывод наше все!
@@ -78,6 +87,7 @@ public class Area
             if(arr[i] != " ")
             {                
                 this.area.append(arr[i] + " ");
+                this.area.append(values[i] + " ");
             }
             start--;
         }
@@ -102,4 +112,46 @@ public class Area
         }
         return ha;
     }
+    private void onlyWord() //функция которая будет считать количество союзных слов
+    {
+        Set<String> dictionary = new HashSet<String>();
+        dictionary.add("И");
+        dictionary.add("Ни");
+        dictionary.add("да");
+        dictionary.add("тоже");
+        dictionary.add("также");
+        dictionary.add("а"); //
+        dictionary.add("Но");
+        dictionary.add("однако");
+        dictionary.add("зато");
+        dictionary.add("же");
+        dictionary.add("да"); //
+        dictionary.add("или");
+        dictionary.add("либо");
+        dictionary.add("та");
+        dictionary.add("то");
+        dictionary.add("или"); // --
+        dictionary.add("что");
+        dictionary.add("будто");
+        dictionary.add("чтобы");
+        dictionary.add("вследствие"); // --
+        dictionary.add("хотя");
+        dictionary.add("как");
+        dictionary.add("ибо");
+        dictionary.add("оттого");
+        dictionary.add("словно");
+        dictionary.add("точно");
+        dictionary.add("несмотря");
+        String[] word = firstText.split(" ");
+        int count = 0;
+        for(int i = 0; i < firstText.length(); i++)
+        {
+            if(dictionary.contains(word[i]))
+            {
+                count++;
+            }
+        }
+        this.area.append("\n "+ count + "- Количество союзов \n");
+    }
+
 }
