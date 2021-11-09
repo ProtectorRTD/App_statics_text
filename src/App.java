@@ -1,4 +1,4 @@
-import java.awt.Color;
+\import java.awt.Color;
 import java.awt.event.ActionListener;
 import javax.swing.*;  
 import java.awt.event.*;
@@ -46,11 +46,11 @@ public class App
     {
         area = new JTextArea(""); 
         area.setLineWrap(true);  //для переноса на следующую строку
-        area.setBounds(100,200, 300,500);  
+        area.setBounds(100,200, 310,510);  
 
         area_v2 = new JTextArea(""); 
         area_v2.setLineWrap(true);  //для переноса на следующую строку
-        area_v2.setBounds(500,200, 300,500); 
+        area_v2.setBounds(500,200, 310,510); 
 
         text();
     }
@@ -74,7 +74,7 @@ public class App
 
         scroll.getViewport().setBackground(Color.white);
         scroll.getViewport().add(area);
-        scroll.setBounds(100,200, 300,500);  
+        scroll.setBounds(100,200, 310,510);  
 
 
         scroll_v2 = new JScrollPane(area_v2);
@@ -82,7 +82,7 @@ public class App
 
         scroll_v2.getViewport().setBackground(Color.white);
         scroll_v2.getViewport().add(area_v2);
-        scroll_v2.setBounds(500,200, 300,500); 
+        scroll_v2.setBounds(500,200, 310,510); 
     }
     private void frame()
     {
