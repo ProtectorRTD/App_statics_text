@@ -33,7 +33,7 @@ public class Area
         // 1) Три самых популярных слова +- сделан функционал, вроде работае правильно
         // 2) Самая часта буква
         // 3) Количество слов + (сделано)
-        // 4) Самая редкая буква + сделано + самая популярная буква
+        // 4) Самая редкая буква + сделано + самая популярная буква точно правильно
         // 5) Самое редкое слово
         // 6) Самое короткое слово
         // 7) Самое длинное слово + (сделано) 
@@ -61,12 +61,15 @@ public class Area
         popularWord();
         onlyWord();
         topCharacters();
-        
+        CounterSymbol();
 
         
         //12398456 123456 должен выделить 98
     }
-    
+    private void CounterSymbol()
+    {
+        this.area.append("\nКоличество символов - "+firstText.length()+".\n");
+    }
     private void topCharacters()
     {
         int count = 0;
@@ -103,7 +106,7 @@ public class Area
         }
         Character result = getKey(hash_map, count);
         boolean more_than_one = false;
-        if(result != null)this.area.append("\n"+result+" - самая популярная буква - " + count +", использований \n");
+        if(result != null)this.area.append("\n"+result+" - самая популярная буква - " + count +", использований.\n");
         while(result != null)
         {
             result = getKey(hash_map, count);
@@ -122,7 +125,7 @@ public class Area
             }
         }
         result = getKey(hash_map, min);
-        if(result != null)this.area.append("\n"+result+"- самая (не)популярная буква - " + min + ",использований\n");
+        if(result != null)this.area.append("\n"+result+"- самая (не)популярная буква - " + min + ",использований.\n");
         while(result != null)
         {
             result = getKey(hash_map, min);
@@ -144,7 +147,7 @@ public class Area
     {
         if(more_than_one == true)
         {
-            this.area.append(" - буквы которые имеют столько же использований");
+            this.area.append(" - буквы которые имеют столько же использований.");
         }
     }
     private <K, V> K getKey(Map<K, V> map, V value)
