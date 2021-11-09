@@ -66,6 +66,7 @@ public class Area
         
         //12398456 123456 должен выделить 98
     }
+    
     private void topCharacters()
     {
         int count = 0;
@@ -87,35 +88,39 @@ public class Area
                             hash_map.put(firstText.charAt(i), 1);
                 }                       
             }              
-            count = Integer.MIN_VALUE;
-            for(int value : hash_map.values())
+        }
+        count = Integer.MIN_VALUE;
+        for(int value : hash_map.values())
+        {
+            if(count < value)
             {
-                if(count < value)
-                {
-                    count = value;                    
-                }
-                if(min > value)
-                {
-                    min = value;
-                }
+                count = value;                    
+            }
+            if(min > value)
+            {
+                min = value;
             }
         }
-
         Character result = getKey(hash_map, count);
         boolean more_than_one = false;
-        if(result != null)this.area.append("\n"+result+" - самая популярная буква - " + count +", использований\n");
+        if(result != null)this.area.append("\n"+result+" - самая популярная буква - " + count +", использований \n");
         while(result != null)
         {
             result = getKey(hash_map, count);
             if(result != null)
             {
                 if(more_than_one == true) this.area.append(", ");
-                this.area.append(result+"");
+                this.area.append(""+result);
+                more_than_one = true;
+                //printfUses(more_than_one);
             }
-            more_than_one = true;
+            if(result == null)
+            {
+                printfUses(more_than_one);
+                more_than_one = false;
+                break;
+            }
         }
-        printfUses(more_than_one);
-        more_than_one = false;
         result = getKey(hash_map, min);
         if(result != null)this.area.append("\n"+result+"- самая (не)популярная буква - " + min + ",использований\n");
         while(result != null)
@@ -124,11 +129,16 @@ public class Area
             if(result != null)
             {
                 if(more_than_one == true) this.area.append(", ");
-                this.area.append(result+"");
+                this.area.append(""+result);
+                more_than_one = true;
             }
-            more_than_one = true;
+            if(result == null)
+            {
+                printfUses(more_than_one);
+                more_than_one = false;
+            }
         }
-        printfUses(more_than_one);
+        // printfUses(more_than_one);
     }
     private void printfUses(boolean more_than_one)
     {
