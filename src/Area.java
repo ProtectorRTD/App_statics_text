@@ -22,6 +22,7 @@ public class Area
     private boolean to_the_end;
     private JTextArea area;
     private Set<String> dictionary;
+    private Parser parser;
     public Area(App app)
     {
         this.app = app;
@@ -37,13 +38,13 @@ public class Area
         // 5) Самое редкое слово
         // 6) Самое короткое слово
         // 7) Самое длинное слово + (сделано) 
-        // 8) Подсчет каждой буквы самая частая буква 
+        // 8) Подсчет каждой буквы самая частая буква (сделано)
         // 9) Количество абзацев (не совсем понятно, что именно считается через \n + \t или другое)
         // 10) Количество матов
         // 11) Подсчёт по группам : диеслово имэныкы
         // 12) Поиск по тексту
         // 13) Количество родов слов
-        // 14) Количество символов
+        // 14) Количество символов +
         // 15) Количество союзов + сделано (но нужно потом для англ )
         // 16) Количество воды
         // 17) Количество уникальных слоформ
@@ -62,7 +63,6 @@ public class Area
         onlyWord();
         topCharacters();
         CounterSymbol();
-
         
         //12398456 123456 должен выделить 98
     }
@@ -125,7 +125,7 @@ public class Area
             }
         }
         result = getKey(hash_map, min);
-        if(result != null)this.area.append("\n"+result+"- самая (не)популярная буква - " + min + ",использований.\n");
+        if(result != null)this.area.append("\n"+result+" - самая (не)популярная буква - " + min + ",использований.\n");
         while(result != null)
         {
             result = getKey(hash_map, min);
@@ -166,24 +166,69 @@ public class Area
     }
     private void theBiggestWord(String word[]) //находить самое длинное слово а ещё и самое короткое нейминг для клоунов
     {
-        //Refactoring 
-        String longest_word = "";
-        char[] array = new char[1500000];  
-        Arrays.fill(array, 'a');  
-        String smallest_word = new String(array);  
+        int lenghtBiggest = Integer.MIN_VALUE;
+        int lenghtSmallest = Integer.MAX_VALUE;
         for(int i = 0; i < word.length; i++)
         {
-            if(!dictionary.contains(word[i]) && longest_word.length() < word[i].length())
+            if(!dictionary.contains(word[i]) && lenghtBiggest < word[i].length())
             {
-                longest_word = word[i];
+                lenghtBiggest = word[i].length();
             }
-            if(!dictionary.contains(word[i]) && smallest_word.length() >= word[i].length())
+            if(!dictionary.contains(word[i]) && lenghtSmallest >= word[i].length())
             {
-                smallest_word = word[i];
+                lenghtSmallest = word[i].length();
             }
         }
-        this.area.append("\n"+longest_word + " - Самое длинное слово");
-        this.area.append("\n"+smallest_word+ " - Самое короткое слово");
+        String[] longest_word_array = new String[15000];
+        String[] smallest_word_array = new String[15000];
+        int count = 0;
+        int count_v2 = 0;
+        for(int i = 0; i < word.length; i++)
+        {
+            if(word[i].length() == lenghtBiggest)
+            {
+                longest_word_array[count] = word[i];
+                count++;
+            }
+            if(word[i].length() == lenghtSmallest)
+            {
+                smallest_word_array[count_v2] = word[i];
+                count_v2++;
+            }
+        }
+        for(int i = 0; i <= count; i++)
+        {
+                if(i == 0)
+                {
+                    this.area.append("\n"+longest_word_array[0] + " - Самое длинное слово, ");   
+                }
+                else
+                {
+                    if(longest_word_array[i] != null)
+                    {
+                        this.area.append(longest_word_array[i] + "");
+                        if(i+1 < count) this.area.append(",");   
+                    }
+                }
+        }
+        this.area.append(" - Слова с такой же длиной");
+        for(int i = 0; i <= count_v2; i++)
+        {
+                if(i == 0)
+                {
+                    this.area.append("\n"+smallest_word_array[0] + " - Самое короткое слово, ");   
+                }
+                else
+                {
+                    if(smallest_word_array[i] != null)
+                    {
+                        this.area.append(smallest_word_array[i] + "");
+                        if(i+1 < count) this.area.append(",");   
+                    }
+                }
+        }
+        this.area.append(" - Слова с такой же длиной");
+        
     }
     private void count_word(int lenght) //сколько слов в тексте
     {
@@ -228,13 +273,31 @@ public class Area
             }            
             start--;
         }
+        boolean first = false;
         for(int j = 0; j < arr.length-1; j++)
         {
             if(arr[j] != " ")
             {
-                this.area.append("\n"+arr[j] + " - Самое редкое слово");
-                break;
+                if(first == true && values[j] == count)
+                {
+                    if(j+1 < arr.length-1 && values[j+1] == values[j])
+                    {
+                        this.area.append(arr[j]+",");
+                        first = true;
+                        start = 0;
+                    }
+                }
+                if(first == false)
+                {
+                    this.area.append("\n"+arr[j] + " - Самое редкое слово, ");
+                    count = values[j];
+                }
+                first = true;
             }
+        }
+        if(start == 0) //больше чем 1 слово
+        {
+           this.area.append(" - Слова с такой же редкостью");
         }
         count_word(word.length);
         theBiggestWord(word);
