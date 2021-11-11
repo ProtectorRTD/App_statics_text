@@ -21,7 +21,7 @@ public class Characters
     }
     private void CounterSymbol() //++
     {
-        this.area.append("\nКоличество символов - "+firstText.length()+".\n");
+        this.area.append("\nКоличество символов - "+firstText.length()+".");
     }
     private void topCharacters() //++
     {
@@ -59,7 +59,7 @@ public class Characters
         }
         Character result = getKey(hash_map, count);
         boolean more_than_one = false;
-        if(result != null)this.area.append("\n"+result+" - самая популярная буква - " + count +", использований.\n");
+        if(result != null)this.area.append("\n"+result+" - самая популярная буква - " + count +", использований.");
         while(result != null)
         {
             result = getKey(hash_map, count);
@@ -78,7 +78,7 @@ public class Characters
             }
         }
         result = getKey(hash_map, min);
-        if(result != null)this.area.append("\n"+result+" - самая (не)популярная буква - " + min + ",использований.\n");
+        if(result != null)this.area.append("\n"+result+" - самая (не)популярная буква - " + min + ",использований.");
         while(result != null)
         {
             result = getKey(hash_map, min);
