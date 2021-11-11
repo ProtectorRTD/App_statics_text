@@ -6,10 +6,14 @@ import java.util.HashSet;
 public class Parser 
 {
     private HashSet<String> dictionary;
+    private HashSet<String> stopWords;
     public Parser()
     {
         String filePath = "src/russian.txt"; //tut if na toolbar
         dictionary = readAllBytesJava7(filePath);
+        filePath = "src/russian_stopwords.txt";
+        stopWords = readAllBytesJava7(filePath);
+        
         System.out.println("");
     }
     private static HashSet<String> readAllBytesJava7(String filePath) 
@@ -54,6 +58,10 @@ public class Parser
     public HashSet<String> getHashSet()
     {
         return this.dictionary;
+    }
+    public HashSet<String> getstopWords()
+    {
+        return this.stopWords;
     }
 
 }
