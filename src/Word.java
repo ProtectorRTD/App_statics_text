@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.JTextArea;
+
+//сделать когда все слова использовались лишь 1 раз
 public class Word 
 {
     private Area area_class;
@@ -15,104 +17,24 @@ public class Word
     private JTextArea area;
     private Set<String> dictionary;
     private HashSet<String> checking;
+    private waterText waterText;
     public Word(JTextArea area, Area area_class)
     {
         this.area = area;
         firstText = area_class.getField();//geter
         dictionary = area_class.getDictionary();
         checking = area_class.getDictionaryword();
+        waterText = new waterText(area, area_class);
         start();
     }
     private void start()
     {
         popularWord();
     }
-    private void theBiggestWord(String word[]) //находить самое длинное слово а ещё и самое короткое нейминг для клоунов
-    {
-        int lenghtBiggest = Integer.MIN_VALUE;
-        int lenghtSmallest = Integer.MAX_VALUE;
-        int count = 0;
-        for(int i = 0; i < word.length; i++)
-        {
-            if(!dictionary.contains(word[i]) && lenghtBiggest < word[i].length())
-            {
-                lenghtBiggest = word[i].length();
-            }
-            if(!dictionary.contains(word[i]) && lenghtSmallest >= word[i].length())
-            {
-                lenghtSmallest = word[i].length();
-            }
-            if(checking.contains(word[i]))
-            {
-                count++;
-            }
-        }
-        this.area.append("\n"+count+"- Количество слов в тексте");
-        String[] longest_word_array = new String[15000];
-        String[] smallest_word_array = new String[15000];
-        count = 0;
-        int count_v2 = 0;
-        for(int i = 0; i < word.length; i++)
-        {
-            if(word[i].length() == lenghtBiggest)
-            {
-                longest_word_array[count] = word[i];
-                count++;
-            }
-            if(word[i].length() == lenghtSmallest)
-            {
-                smallest_word_array[count_v2] = word[i];
-                count_v2++;
-            }
-        }
-        for(int i = 0; i <= count; i++)
-        {
-                if(i == 0)
-                {
-                    if( checking.contains(longest_word_array[0]) == true)
-                    {
-                        this.area.append("\n"+longest_word_array[0] + " - Самое длинное слово, "); 
-                    }  
-                }
-                else
-                {
-                    if(longest_word_array[i] != null)
-                    {
-                        if( checking.contains(longest_word_array[i]) == true)
-                        {
-                            this.area.append(longest_word_array[i] + "");
-                            if(i+1 < count) this.area.append(",");   
-                        }
-                    }
-                }
-        }
-        this.area.append(" - Слова с такой же длиной");
-        for(int i = 0; i <= count_v2; i++)
-        {
-                if(i == 0)
-                {
-                    if( checking.contains(smallest_word_array[0]) == true)
-                    {
-                        this.area.append("\n"+smallest_word_array[0] + " - Самое короткое слово, "); 
-                    }  
-                }
-                else
-                {
-                    if(smallest_word_array[i] != null)
-                    {
-                        if( checking.contains(smallest_word_array[i]) == true)
-                        {
-                            this.area.append(smallest_word_array[i] + "");
-                            if(i+1 < count) this.area.append(",");   
-                        }
-                    }
-                }
-        }
-        this.area.append(" - Слова с такой же длиной");
-        
-    }
     private void popularWord()
     {
+        // Если у всех трех слов 1 количество использований, то сказать что все слова уникальные, 
+        // сказать что слова не повторяются
         HashMap<String, Integer> hash_map = new HashMap<String, Integer>(); //создается карта 
         int count = 0; // счетчик для того чтобы считать какой раз уже записывалось 
         firstText = firstText.replaceAll("[^a-zA-Zа-яА-Я0-9]"," ");
@@ -130,62 +52,152 @@ public class Word
             else 
             {
                     //refactoring 
-                    hash_map.put(word[i], 1);
+                    if(checking.contains(word[i]))hash_map.put(word[i], 1);
             }                       
         }
         Map<String, Integer> hash_map_after_sorting = sortByValue(hash_map); // спизженая функция которая сортирует по ключам 
         String [] arr = hash_map_after_sorting.keySet().toArray(new String [0]); // из хэш мапы делаем в массив
         Integer[] values = (hash_map_after_sorting.values().toArray(new Integer[hash_map.values().size()]));
+        
         int start = arr.length - 1;
-        this.area.setText("Топ 3 слова - ");
-        for(int i  = arr.length-1; i>=0; i--) //вывод наше все!
+        boolean no_print = false;
+        if(start >= 0 && values[start] == 1) 
         {
-            if(start+4 == arr.length) break;
-            if(i < 0 ) break;
-            if(arr[i] != " ")
-            {      
-                if( checking.contains(arr[i]) == true)
-                {
-                    this.area.append(arr[i] + "-");
-                    this.area.append(values[i] + ", ");
-                }          
-            }            
-            start--;
+            this.area.setText("Все слова являются уникальными");
+            no_print = true;
         }
-        boolean first = false;
-        for(int j = 0; j < arr.length-1; j++)
+        else
         {
-            if(arr[j] != " ")
+            count = 0;
+            int array_for_printf[] = new int[3]; 
+            String string_for_printf[] = new String[3]; 
+            for(int i  = arr.length-1; i>=0; i--) //вывод наше все!
             {
-                if(first == true && values[j] == count)
+                if(start+3 == arr.length -1) break;
+                else
                 {
-                    if(j+1 < arr.length-1 && values[j+1] == values[j])
-                    {
-                        if( checking.contains(arr[j]) == true)
-                        {
-                            this.area.append(arr[j]+",");
-                            first = true;
-                            start = 0;
-                        }
-                    }
+                    array_for_printf[count] = values[i];
+                    string_for_printf[count] = arr[i];
+                    count++;
+                    start--;
                 }
-                if(first == false)
-                {
-                    if( checking.contains(arr[j]) == true) 
-                    {
-                        this.area.append("\n"+arr[j] + " - Самое редкое слово, ");
-                        count = values[j];
-                    }
-                }
-                first = true;
+            }
+
+        }
+        if(no_print == false)print_for_word(values, arr, count);
+        theBiggestWord(word); 
+        waterText.countWater(word);
+    }
+
+    private void theBiggestWord(String word[]) //находить самое длинное слово а ещё и самое короткое нейминг для клоунов
+    {
+        int lenghtBiggest = Integer.MIN_VALUE;
+        int lenghtSmallest = Integer.MAX_VALUE;
+        int count = 0, count_v2 = 0;
+        for(int i = 0; i < word.length; i++)
+        {
+            if(!dictionary.contains(word[i]) && lenghtBiggest < word[i].length() && checking.contains(word[i]))
+            {
+                lenghtBiggest = word[i].length();
+            }
+            if(!dictionary.contains(word[i]) && word[i].length() > 2 && lenghtSmallest >= word[i].length() && checking.contains(word[i]) )
+            {
+                lenghtSmallest = word[i].length();
+                System.out.println(word[i]);
+            }
+            if(checking.contains(word[i].toLowerCase()))
+            {
+                count++;
             }
         }
-        if(start == 0) //больше чем 1 слово
+        this.area.append("\n"+count+" -- Количество слов в тексте");
+
+        String[] longest_word_array = new String[15000];
+        String[] smallest_word_array = new String[15000];
+        count = 0;
+        for(int i = 0; i < word.length; i++)
         {
-           this.area.append(" - Слова с такой же редкостью");
+            if(word[i].length() == lenghtBiggest)
+            {
+                if(checking.contains(word[i]))
+                {
+                    longest_word_array[count] = word[i];
+                    count++;
+                }
+            }
+            if(word[i].length() == lenghtSmallest)
+            {
+                if(checking.contains(word[i]))
+                {
+                    // с короткими ошибка
+                    smallest_word_array[count_v2] = word[i];
+                    count_v2++;
+                    System.out.println(word[i]);
+                }
+            }
         }
-        theBiggestWord(word);
-        
+        print_for_big_smal(longest_word_array, smallest_word_array, count, count_v2);
+    }
+    private void print_for_big_smal(String[] longest_word_array, String[] smallest_word_array, int count, int count_v2) 
+    {
+        if(count == 1)
+        {
+            this.area.append("\n"+longest_word_array[0] + " - Самое длинное слово"); 
+        }
+        else
+        {
+            if(count != 0)
+            {
+                this.area.append("\n");
+                for(int i = 0; i < count; i++)
+                {
+                    this.area.append(longest_word_array[i]);
+                    if(i+1 < count) this.area.append(", ");   
+                }
+                this.area.append("-- самые длинные слова");
+            }
+        }
+        if(count_v2 == 1)
+        {
+            this.area.append("\n"+smallest_word_array[0] + " - Самое короткое слово"); 
+        }
+        else
+        {
+            if(count_v2 != 0)
+            {
+                this.area.append("\n");
+                for(int i = 0; i < count_v2; i++)
+                {
+                    this.area.append(smallest_word_array[i]);
+                    if(i+1 < count_v2) this.area.append(", ");   
+                }
+                this.area.append("-- самые короткие слова"); // возможно давать сколько выводить 
+            }
+        }
+    }
+
+
+    private void print_for_word(Integer[] values, String[] words, int count) //принт для топ 3 слов
+    {
+        // самые большие слова в контексте использования написаны в конце массива
+        if(words.length > 1)
+        {
+            this.area.setText("Топ " + count + " слова : ");
+        }
+        else 
+        {
+            this.area.setText("Топ слово : ");
+        }
+        for(int i = words.length-1; i >= 0; i--)
+        {
+            this.area.append(words[i]+" - " + values[i]);
+            if(i+count > words.length) 
+            {
+                this.area.append(", ");
+            }
+            if(i+count-1 < words.length) break;
+        }
+
     }
     private HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm)
     {
