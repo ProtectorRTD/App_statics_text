@@ -1,11 +1,59 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashSet;
+
+
 public class Parser 
 {
-//src/wordforms-russian+.txt
+    private HashSet<String> dictionary;
+    public Parser()
+    {
+        String filePath = "src/russian.txt"; //tut if na toolbar
+        dictionary = readAllBytesJava7(filePath);
+        System.out.println("");
+    }
+    private static HashSet<String> readAllBytesJava7(String filePath) 
+    {
+        HashSet <String> result = new HashSet<>();
+        //Name of the file
+        String fileName=filePath;
+        try{
+           //Create object of FileReader
+           FileReader inputFile = new FileReader(fileName);
+           //Instantiate the BufferedReader Class
+           BufferedReader bufferReader = new BufferedReader(inputFile);
+           //Variable to hold the one line data
+           String line;
+           // Read file line by line and print on the console
+           line = bufferReader.readLine();
+           while ((line = bufferReader.readLine()) != null)
+            {
+                result.add(line);
+            }
+           //Close the buffer reader
+           bufferReader.close();
+        }catch(Exception e)
+        {
+           System.out.println("Error while reading file line by line:" + e.getMessage());                      
+        }
+        return result;
+    }
+    // public boolean check(String compare)
+    // {
+    //     isDone = false;
+    //     if(compare != null && dictionary != null)
+    //     {
+    //         if(this.dictionary.contains(compare)) isDone = true;
+    //         else
+    //         {
+    //             isDone = false;
+    //         }
+    //     }
+    //     return isDone;
+    // }
+    public HashSet<String> getHashSet()
+    {
+        return this.dictionary;
+    }
 
 }
