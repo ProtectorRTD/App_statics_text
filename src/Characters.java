@@ -18,6 +18,36 @@ public class Characters
     {
         CounterSymbol();
         topCharacters();   
+        
+    }
+    private void Symbolnotuse(HashMap<Character, Integer> hash_map)
+    {
+        // если бул будет для англ то поменять алфавит
+        String alphabetArray = "abcdefghijklmnopqrstuvwxyz";
+        String alhabetRus = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ".toLowerCase();
+        Character [] result = new Character[100];
+        boolean if_not = false;
+        int count = 0;
+        for(int i = 0; i < alhabetRus.length(); i++)
+        {
+            if(!hash_map.containsKey(alhabetRus.charAt(i)))
+            {
+                if_not = true;
+                result[count] = alhabetRus.charAt(i);
+                count++;
+            }
+        }
+        if(if_not == false) this.area.append("\nВсе буквы были использованы");
+        else
+        {
+            this.area.append("\nБуквы, которые были не использованные - ");
+            for(int i = 0; i < count; i++)
+            {
+                this.area.append(""+result[i]);
+                if(i+1 < count) this.area.append(",");
+            }
+
+        }
     }
     private void CounterSymbol() //++
     {
@@ -94,6 +124,7 @@ public class Characters
                 more_than_one = false;
             }
         }
+        Symbolnotuse(hash_map);//!
         // printfUses(more_than_one);
     }
     private void printfUses(boolean more_than_one) //++
