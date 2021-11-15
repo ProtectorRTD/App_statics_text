@@ -24,13 +24,13 @@ public class Characters
     {
         // если бул будет для англ то поменять алфавит
         String alphabetArray = "abcdefghijklmnopqrstuvwxyz";
-        String alhabetRus = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ".toLowerCase();
+        String alhabetRus = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
         Character [] result = new Character[100];
         boolean if_not = false;
         int count = 0;
         for(int i = 0; i < alhabetRus.length(); i++)
         {
-            if(!hash_map.containsKey(alhabetRus.charAt(i)))
+            if(!hash_map.containsKey(alhabetRus.charAt(i))) //что-то не так с буквой о
             {
                 if_not = true;
                 result[count] = alhabetRus.charAt(i);
@@ -40,7 +40,8 @@ public class Characters
         if(if_not == false) this.area.append("\nВсе буквы были использованы");
         else
         {
-            this.area.append("\nБуквы, которые были не использованные - ");
+            // this.area.append("\n————————————————————————");
+            this.area.append("\nБуквы, которые были не использованные — ");
             for(int i = 0; i < count; i++)
             {
                 this.area.append(""+result[i]);
@@ -51,7 +52,9 @@ public class Characters
     }
     private void CounterSymbol() //++
     {
-        this.area.append("\nКоличество символов - "+firstText.length()+".");
+        // this.area.append("\n————————————————————————");
+        this.area.append("\nКоличество символов — "+firstText.length()+".");
+        // this.area.append("\n————————————");
     }
     private void topCharacters() //++
     {
@@ -65,7 +68,7 @@ public class Characters
                 if(hash_map.containsKey(firstText.charAt(i)) == true) 
                 {
                             //создать функцию которая не будет записывать какие-то частицы
-                            count = hash_map.get(firstText.charAt(i));
+                            count = hash_map.get(firstText.charAt(i)); //превращать большую букву в маленькую
                             count++;
                             hash_map.replace(firstText.charAt(i), count); // заменять с таким же на 1 больше, было 2 раза а станет 3
                 }
@@ -89,7 +92,7 @@ public class Characters
         }
         Character result = getKey(hash_map, count);
         boolean more_than_one = false;
-        if(result != null)this.area.append("\n"+result+" - самая популярная буква - " + count +", использований.");
+        if(result != null)this.area.append("\nСамая популярная буква — " + result+"," + count +" использований.");
         while(result != null)
         {
             result = getKey(hash_map, count);
@@ -108,19 +111,27 @@ public class Characters
             }
         }
         result = getKey(hash_map, min);
-        if(result != null)this.area.append("\n"+result+" - самая (не)популярная буква - " + min + ",использований.");
+        // this.area.append("\n————————————————————————");
+        if(result != null)this.area.append("\nСамая (не)популярная буква — " + result +"," + min + " использований.");
+
+        // this.area.append("\n————————————————————————");
+        boolean one_print = false;
         while(result != null)
         {
             result = getKey(hash_map, min);
             if(result != null)
             {
-                if(more_than_one == true) this.area.append(", ");
-                this.area.append(""+result);
+                if(one_print == false)                 
+                {
+                    this.area.append("Буквы которые имеют столько же использований — ");
+                    one_print = true;
+                }
+                this.area.append(""+result + " ");
                 more_than_one = true;
             }
             if(result == null)
             {
-                printfUses(more_than_one);
+                //printfUses(more_than_one);
                 more_than_one = false;
             }
         }
@@ -131,7 +142,8 @@ public class Characters
     {
         if(more_than_one == true)
         {
-            this.area.append(" - буквы которые имеют столько же использований.");
+            this.area.append(" — буквы которые имеют столько же использований.");
+            // this.area.append("\n————————————");
         }
     }
     private <K, V> K getKey(Map<K, V> map, V value) //++
