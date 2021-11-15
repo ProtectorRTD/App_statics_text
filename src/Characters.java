@@ -7,6 +7,8 @@ public class Characters
     private JTextArea area;
     private String firstText;
     private Area area_class;
+    private char maxCharacter;
+    private char minCharacter;
     public Characters(JTextArea area, Area area_class)
     {
         this.area_class = area_class;
@@ -30,16 +32,21 @@ public class Characters
         int count = 0;
         for(int i = 0; i < alhabetRus.length(); i++)
         {
-            if(!hash_map.containsKey(alhabetRus.charAt(i))) //что-то не так с буквой о
+            if(!hash_map.containsKey(alhabetRus.charAt(i)) && alhabetRus.charAt(i) != minCharacter && alhabetRus.charAt(i) != maxCharacter) //что-то не так с буквой о
             {
                 if_not = true;
                 result[count] = alhabetRus.charAt(i);
                 count++;
             }
         }
-        if(if_not == false) this.area.append("\nВсе буквы были использованы");
+        if(if_not == false)
+        {
+            this.area.append("\n————————————————————————");
+            this.area.append("\nВсе буквы были использованы");
+        }
         else
         {
+            this.area.append("\n————————————————————————");
             // this.area.append("\n————————————————————————");
             this.area.append("\nБуквы, которые были не использованные — ");
             for(int i = 0; i < count; i++)
@@ -52,6 +59,7 @@ public class Characters
     }
     private void CounterSymbol() //++
     {
+        this.area.append("\n————————————————————————");
         // this.area.append("\n————————————————————————");
         this.area.append("\nКоличество символов — "+firstText.length()+".");
         // this.area.append("\n————————————");
@@ -61,20 +69,21 @@ public class Characters
         int count = 0;
         int min = Integer.MAX_VALUE;
         HashMap<Character, Integer> hash_map = new HashMap<Character, Integer>();
+        firstText = firstText.toLowerCase(); //!
         for(int i = 0; i < firstText.length(); i++) // пройтись циклом по всему массиву 
         { 
-            if(firstText.charAt(i) >= 'A' && 'Z'<= firstText.charAt(i) || firstText.charAt(i) >= 'a' && 'z'<= firstText.charAt(i))
+            if(firstText.charAt(i) >= 'а' && 'я'<= firstText.charAt(i) || firstText.charAt(i) >= 'А' && 'Я'<= firstText.charAt(i))
             {
                 if(hash_map.containsKey(firstText.charAt(i)) == true) 
                 {
                             //создать функцию которая не будет записывать какие-то частицы
-                            count = hash_map.get(firstText.charAt(i)); //превращать большую букву в маленькую
-                            count++;
-                            hash_map.replace(firstText.charAt(i), count); // заменять с таким же на 1 больше, было 2 раза а станет 3
+                    count = hash_map.get(firstText.charAt(i)); //превращать большую букву в маленькую
+                    count++;
+                    hash_map.replace(firstText.charAt(i), count); // заменять с таким же на 1 больше, было 2 раза а станет 3
                 }
                 else 
                 {
-                            hash_map.put(firstText.charAt(i), 1);
+                    hash_map.put(firstText.charAt(i), 1);
                 }                       
             }              
         }
@@ -91,8 +100,14 @@ public class Characters
             }
         }
         Character result = getKey(hash_map, count);
+        maxCharacter = result;
         boolean more_than_one = false;
-        if(result != null)this.area.append("\nСамая популярная буква — " + result+"," + count +" использований.");
+        
+        if(result != null)
+        {
+            this.area.append("\n————————————————————————");
+            this.area.append("\nСамая популярная буква — " + result+"," + count +" использований.");
+        }
         while(result != null)
         {
             result = getKey(hash_map, count);
@@ -111,8 +126,14 @@ public class Characters
             }
         }
         result = getKey(hash_map, min);
+        minCharacter = result;
+        
         // this.area.append("\n————————————————————————");
-        if(result != null)this.area.append("\nСамая (не)популярная буква — " + result +"," + min + " использований.");
+        if(result != null)
+        {
+            this.area.append("\n————————————————————————");
+            this.area.append("\nСамая (не)популярная буква — " + result +"," + min + " использований.");
+        }
 
         // this.area.append("\n————————————————————————");
         boolean one_print = false;
@@ -123,6 +144,7 @@ public class Characters
             {
                 if(one_print == false)                 
                 {
+                    this.area.append("\n————————————————————————");
                     this.area.append("Буквы которые имеют столько же использований — ");
                     one_print = true;
                 }
