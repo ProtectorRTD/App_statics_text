@@ -36,6 +36,7 @@ public class waterText
     }
     private void printfWater(int result)
     {
-        this.area.append("\n"+result+"% - процент воды в тексте");
+        //this.area.append("\n————————————————————————");
+        this.area.append("\nПроцент воды в тексте — " + result);
     }
 }
