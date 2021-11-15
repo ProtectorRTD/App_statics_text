@@ -51,8 +51,8 @@ public class Word
             }
             else 
             {
-                    //refactoring 
-                    if(checking.contains(word[i]))hash_map.put(word[i], 1);
+                //refactoring 
+                if(checking.contains(word[i]) && word[i].length() > 2) hash_map.put(word[i], 1); // проверку на буквы
             }                       
         }
         Map<String, Integer> hash_map_after_sorting = sortByValue(hash_map); // спизженая функция которая сортирует по ключам 
@@ -63,6 +63,7 @@ public class Word
         boolean no_print = false;
         if(start >= 0 && values[start] == 1) 
         {
+            // this.area.append("\n————————————————————————");
             this.area.setText("Все слова являются уникальными");
             no_print = true;
         }
@@ -110,7 +111,8 @@ public class Word
                 count++;
             }
         }
-        this.area.append("\n"+count+" -- Количество слов в тексте");
+        // this.area.append("\n————————————————————————");
+        this.area.append("\nКоличество слов в тексте — " + count);
 
         String[] longest_word_array = new String[15000];
         String[] smallest_word_array = new String[15000];
@@ -142,36 +144,39 @@ public class Word
     {
         if(count == 1)
         {
-            this.area.append("\n"+longest_word_array[0] + " - Самое длинное слово"); 
+            // this.area.append("\n————————————————————————");
+            this.area.append("\nСамое длинное слово — "+longest_word_array[0]); 
         }
         else
         {
             if(count != 0)
             {
-                this.area.append("\n");
+                // this.area.append("\n————————————————————————");
+                this.area.append("\nСамые длинные слова — ");
                 for(int i = 0; i < count; i++)
                 {
                     this.area.append(longest_word_array[i]);
                     if(i+1 < count) this.area.append(", ");   
-                }
-                this.area.append("-- самые длинные слова");
+                }                
             }
         }
         if(count_v2 == 1)
         {
-            this.area.append("\n"+smallest_word_array[0] + " - Самое короткое слово"); 
+            // this.area.append("\n————————————————————————");
+            this.area.append("\nСамое короткое слово — "+smallest_word_array[0]); 
         }
         else
         {
             if(count_v2 != 0)
-            {
-                this.area.append("\n");
+            {         
+                // this.area.append("\n————————————————————————");
+                this.area.append("\nСамые короткие слова — ");
                 for(int i = 0; i < count_v2; i++)
                 {
                     this.area.append(smallest_word_array[i]);
                     if(i+1 < count_v2) this.area.append(", ");   
                 }
-                this.area.append("-- самые короткие слова"); // возможно давать сколько выводить 
+                 // возможно давать сколько выводить 
             }
         }
     }
@@ -190,7 +195,7 @@ public class Word
         }
         for(int i = words.length-1; i >= 0; i--)
         {
-            this.area.append(words[i]+" - " + values[i]);
+            this.area.append(words[i]+" — " + values[i]);
             if(i+count > words.length) 
             {
                 this.area.append(", ");
