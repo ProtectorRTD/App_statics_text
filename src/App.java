@@ -1,13 +1,20 @@
 import java.awt.Color;
 
-import javax.swing.*;  
+import javax.swing.*;
+
 import java.awt.event.*;
+import java.awt.Toolkit; 
 public class App implements ActionListener, KeyListener
 {
     private static JFrame f;
     private JLabel a_labe1,a_labe2;
     private JTextArea area,area_v2;
     private JScrollPane scroll,scroll_v2;
+    private Keyboard keyboard;
+    private JLabel language ;
+    private boolean ChangeLanguage;
+    private SearchText searchText;
+
 //        Читать причину ниже
 //
     // private JButton button_size;
@@ -17,10 +24,11 @@ public class App implements ActionListener, KeyListener
 //    private JPanel p_right;
 //    private JPanel p_bottom;
     private JMenuBar mb;
-    private JMenu file,edit,help,help_sub_menu;
-    private JMenuItem selectAll,open,lang,eng,ru, run; //cut,copy, paste
+    public JMenu file,edit,help,help_sub_menu;
+    public JMenuItem selectAll,open,lang,eng,ru, run, changeLanguage, search; //cut,copy, paste
     private String textfirst,textsecond;
-
+    private int language_count;
+    
 
     private Area area_class;
     //private Area area_class; типо так сделать Денис?
@@ -30,11 +38,14 @@ public class App implements ActionListener, KeyListener
     }
     public App()
     {
+        ChangeLanguage = false;
         area_class = new Area(this);
+        language_count = 0;
         initArea();
         initScroll();
         init_a_labe1();
         init_a_labe2();
+        initSearch();
 
 //        Читать причину ниже
 //
@@ -54,11 +65,15 @@ public class App implements ActionListener, KeyListener
         // init_paste();
         init_selectAll();
         init_run();
+        initChangeLanguage();
         init_help();
         help_sub_menu();
         init_lang_chose();
         init_eng();
         init_ru();
+
+        keyboard = new Keyboard(this);
+        searchText = new SearchText(this);
         frame();
     }
     private void frame()
@@ -72,6 +87,9 @@ public class App implements ActionListener, KeyListener
         f.setLayout(null);
 //        Читать причину ниже
 //
+
+
+
         // f.add(button_size);
         f.add(scroll);f.add(scroll_v2);
         f.add(a_labe1);f.add(a_labe2);
@@ -89,17 +107,25 @@ public class App implements ActionListener, KeyListener
         // edit.add(paste);
         edit.add(selectAll);
         file.add(open);
+        help.add(changeLanguage);
+        help.add(search);
         help.add(help_sub_menu);
         help_sub_menu.add(lang);
         lang.add(eng);lang.add(ru);
         edit.add(run);
         mb.add(file);mb.add(edit);mb.add(help);
         f.add(mb);
+        f.add(language);
         f.setJMenuBar(mb);
         //f.pack();
         f.setVisible(true);
     }
     //Розобратсяь с Jpanel и JScrollPane, JTextAre<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    private void initSearch()
+    {
+        search=new JMenuItem("Search in both file");
+        search.addActionListener(this);
+    }
     private void initArea()
     {
         area = new JTextArea("");
@@ -113,6 +139,11 @@ public class App implements ActionListener, KeyListener
         area_v2.setBounds(450,50, 315,420);
 
         text();
+    }
+    private void initChangeLanguage()
+    {
+        changeLanguage=new JMenuItem("Change language");
+        changeLanguage.addActionListener(this);
     }
     private void initScroll()
     {
@@ -148,11 +179,18 @@ public class App implements ActionListener, KeyListener
 //            }
 //        });
 //    }
+    public JTextArea getArea()
+    {
+        return area;
+    }
     private void init_a_labe1()
     {
         a_labe1=new JLabel("Insert text here");
         a_labe1.setBounds(50,20,400,20);
 
+        
+        language = new JLabel("Русский язык");
+        language.setBounds(600,300, 400,400);
     }
     private void init_a_labe2()
     {
@@ -160,7 +198,10 @@ public class App implements ActionListener, KeyListener
         a_labe2.setBounds(450,20,400,20);
 
     }
-
+    public JLabel GetLanguage()
+    {
+        return language;
+    }
 //    Доделать________________________________
 //
 //    private void init_p_left(){
@@ -216,7 +257,7 @@ public class App implements ActionListener, KeyListener
     // }
     private void init_selectAll()
     {
-        selectAll=new JMenuItem("selectAll          CTRL+A");
+        selectAll=new JMenuItem("selectAll");
         selectAll.addActionListener(this);    
     }
         //Вкладка ран
@@ -224,6 +265,9 @@ public class App implements ActionListener, KeyListener
     {
         run = new JMenuItem("Run");
         run.addActionListener(this);
+        // KeyStroke f5 = KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0);
+        // run.setAccelerator(f5);
+
         //area_class.calculation(area_v2);
         
     }
@@ -243,11 +287,13 @@ public class App implements ActionListener, KeyListener
     }
     private void init_eng()
     {
-        eng=new JMenu("English");
+        eng=new JMenuItem("English");
+        language.setText("English");
     }
     private void init_ru()
     {
-        ru=new JMenu("Russian");
+        ru=new JMenuItem("Russian");
+        language.setText("Russian");
     }
 // Все что ниже магия егора я еще не дорос пойму потом (((((((
     private void text()
@@ -263,7 +309,9 @@ public class App implements ActionListener, KeyListener
     {
         return textsecond;
     }
+    
     //Никита функция которую передаешь действие например e.getSourse == cut
+
     public void actionPerformed(ActionEvent e) 
     {
         if(e.getSource() == run)
@@ -275,7 +323,39 @@ public class App implements ActionListener, KeyListener
         {
             area.selectAll();
         }
+        if(e.getSource() == changeLanguage)
+        {
+            if(ChangeLanguage == false)
+            {
+                language_count++;
+                if(language_count > 2) 
+                {
+                    language_count = 2;
+                    ChangeLanguage = true;
+                }
+            }
+            if(ChangeLanguage == true)
+            {
+                language_count--;
+                if(language_count == 0)
+                {
+                    ChangeLanguage = false;
+                }
+            }
+            System.out.println("\n" + language_count);
+            keyboard.SetCountLanguage(language_count);
+        }
+        if(e.getSource() == search)
+        {
+            searchText.CreateTextArea();
+        }
     }
+    public JFrame getFrame()
+    {
+        return f;
+    }
+
+
     @Override
     public void keyTyped(KeyEvent e) 
     {        
@@ -285,8 +365,7 @@ public class App implements ActionListener, KeyListener
     @Override
     public void keyPressed(KeyEvent e) 
     {
-        // TODO Auto-generated method stub
-        
+
     }
     @Override
     public void keyReleased(KeyEvent e) 
