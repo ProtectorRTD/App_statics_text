@@ -1,12 +1,4 @@
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import javax.swing.JTextArea;
 
 public class waterText 
@@ -36,7 +28,7 @@ public class waterText
     }
     private void printfWater(int result)
     {
-        //this.area.append("\n————————————————————————");
-        this.area.append("\nПроцент воды в тексте — " + result);
+        this.area.append("\n————————————————————————");
+        this.area.append("\nПроцент воды в тексте — " + result+"%");
     }
 }
