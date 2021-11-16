@@ -104,7 +104,7 @@ public class Word
             if(!dictionary.contains(word[i]) && word[i].length() > 2 && lenghtSmallest >= word[i].length() && checking.contains(word[i]) )
             {
                 lenghtSmallest = word[i].length();
-                System.out.println(word[i]);
+                // System.out.println(word[i]);
             }
             if(checking.contains(word[i].toLowerCase()))
             {
@@ -112,6 +112,7 @@ public class Word
             }
         }
         // this.area.append("\n————————————————————————");
+        this.area.append("\n————————————————————————");
         this.area.append("\nКоличество слов в тексте — " + count);
 
         String[] longest_word_array = new String[15000];
@@ -134,7 +135,7 @@ public class Word
                     // с короткими ошибка
                     smallest_word_array[count_v2] = word[i];
                     count_v2++;
-                    System.out.println(word[i]);
+                    // System.out.println(word[i]);
                 }
             }
         }
@@ -145,6 +146,7 @@ public class Word
         if(count == 1)
         {
             // this.area.append("\n————————————————————————");
+            this.area.append("\n————————————————————————");
             this.area.append("\nСамое длинное слово — "+longest_word_array[0]); 
         }
         else
@@ -152,6 +154,7 @@ public class Word
             if(count != 0)
             {
                 // this.area.append("\n————————————————————————");
+                this.area.append("\n————————————————————————");
                 this.area.append("\nСамые длинные слова — ");
                 for(int i = 0; i < count; i++)
                 {
@@ -163,6 +166,7 @@ public class Word
         if(count_v2 == 1)
         {
             // this.area.append("\n————————————————————————");
+            this.area.append("\n————————————————————————");
             this.area.append("\nСамое короткое слово — "+smallest_word_array[0]); 
         }
         else
@@ -170,6 +174,7 @@ public class Word
             if(count_v2 != 0)
             {         
                 // this.area.append("\n————————————————————————");
+                this.area.append("\n————————————————————————");
                 this.area.append("\nСамые короткие слова — ");
                 for(int i = 0; i < count_v2; i++)
                 {
