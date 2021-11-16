@@ -87,7 +87,7 @@ public class Area
                 count++;
             }
         }
-        // this.area.append("\n————————————————————————");
+        this.area.append("\n————————————————————————");
         this.area.append("\nКоличество союзов в тексе — "+ count);
     }
     private void putInDictionary()
