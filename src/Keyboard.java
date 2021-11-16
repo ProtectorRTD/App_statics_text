@@ -57,9 +57,10 @@ public class Keyboard extends Area
         {
             public void mouseClicked(MouseEvent e) 
             {
+                System.out.println(count_language);
                 count_language++;
+                if(count_language > 2) count_language = 0;
                 ChangeLabel(count_language);
-                if(count_language == 2) count_language = 0;
             }
         });
     }
