@@ -22,86 +22,119 @@ public class SearchText extends Area
 {
     private App app;
     private Highlighter highlighter;
-    private char[] value;
+    private String value;
     private JTextArea area, area_search;
     private JFrame frame;
     private JScrollPane scroll;
-    private Object last;
+
+    private JButton searchButton;
+    private int lastMatch;
+    private Object highlightTag;
+    private DefaultHighlighter.DefaultHighlightPainter highlightPainter;
     public SearchText(App app) 
     {
         super(app); 
         this.app = app;    
-        area = app.getArea();           
+        lastMatch = 0;
+        area = app.getArea();
+        String first_area = app.getFirst();           
     }
     public void CreateTextArea()
     {
         System.out.println("Start");
         area_search = new JTextArea("Find");
         frame = app.getFrame();        
-        area_search.setBounds(580,5, 140,25);
+        area_search.setBounds(0,480,100,60);
         checkTextArea();
         scroll = new JScrollPane(area_search);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.getViewport().setBackground(Color.white);
         scroll.getViewport().add(area_search);
-        scroll.setBounds(580,5, 140,25); 
+        scroll.setBounds(0,480,100,60); 
+        
+        // private void init_ch_b_text1(){
+        //     ch_b_text1=new JLabel("Text test1");
+        //     ch_b_text1.setBounds(0,480,100,60);
+        // }
+        // private void init_ch_b_text2(){
+        //     ch_b_text2=new JLabel("Text test2");
+        //     ch_b_text2.setBounds(0,480,100,60);
+        // }
+        // private void init_check_box1(){
+        //     check_box1=new JCheckBox();
+        //     check_box1.setBounds(0,480,100,60);
+        // }
+        // private void init_check_box2(){
+        //     check_box2=new JCheckBox();
+        //     check_box2.setBounds(100,480,10,60);
+        // }
+        searchButton = new JButton("Search");
+        searchButton.setBounds(100,480,90,60);
+        searchButton.setVisible(true);
+        scroll.setVisible(true);
+        // searchButton.setEnabled(true);
+        // frame.add(searchButton);
         frame.add(scroll);
-    }
-    private void startCheckArea() throws BadLocationException
-    {
-        HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.pink);
-        Highlighter highlighter = area.getHighlighter();
         app.text();
-        char[] first_area = app.getFirst().toCharArray();
-        int p0 = 0;
-        int p1 = 0;
-        int j = 0;
-        // boolean first = false;
-        for(int i = 0; i < first_area.length; i++)
+
+
+        //сделать так чтобы сразу отрисовалась и подумать над алгоритмом неправильно он работает
+        searchButton.addActionListener(new ActionListener()
         {
-            if(value.length > 0 && first_area[i] == value[0])
-            {
-                p0 = i;
-                // first = true;
-                p1 = 0;
-                for(j = i; j <area_search.getText().length(); j++)
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String text = area_search.getText();
+                if (!text.equals("Find")) 
                 {
-                    if(first_area[j] == value[p1])
-                    {
-                        p1++;
-                    }
+                    value = text;
+                    lastMatch = 0;
                 }
-                p1++;
-                last = highlighter.addHighlight(p0, i+p1, painter );                
-            }
-            // i += j;          
-        }
-    }
-    public void checkTextArea() 
-    {
-        char[] find = new char[]{'F','i','n','d'};
-        area_search.addKeyListener(new KeyAdapter()
-        {
-            public void keyPressed(KeyEvent ke)
-            {
-                if(area_search.getText().equals("Find")) area_search.setText("");
-                value = area_search.getText().toCharArray();
                 try 
                 {
+                    if(highlightTag != null)area.getHighlighter().removeHighlight(highlightTag);                
                     startCheckArea();
-                } catch (BadLocationException e) 
-                {
-                    e.printStackTrace();
-                }                                
+                } catch (BadLocationException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             }
         });
-        if(last != null)
+
+        // frame.add(app.p_bottom);
+    }
+    private void startCheckArea() throws BadLocationException 
+    {
+        String first_area = app.getFirst();
+        if (lastMatch + value.length() >= first_area.length()) 
         {
-            area.getHighlighter().removeHighlight(highlighter);
+            lastMatch = 0;
         }
-        //одно решение вырезать тот текст что одинаковые а другой поделить на 2 части принтануть до него и потом наш выделить и второй также 
-        //создать бул в кейцбоарде чтобы тем же нажатие 
- 
-        // если добавилось что-то в первое поле то тоже сразу же удалить хайлатер
+        for (; lastMatch + value.length() <= first_area.length(); lastMatch++) //find value
+        {
+            String match = area.getText(lastMatch, value.length());
+            if (value.equalsIgnoreCase(match)) 
+            {
+                if (highlightTag != null) 
+                {
+                    area.getHighlighter().removeHighlight(highlightTag);
+                }
+                if (highlightPainter == null)
+                {
+                        highlightPainter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+                }
+                highlightTag = area.getHighlighter().addHighlight(lastMatch, lastMatch + value.length(), highlightPainter);
+                lastMatch += value.length();
+                break;
+            }
+        }      
+    }
+    public void checkTextArea() //если что-то написал в первое поле то запускается
+    {
+        if(highlightTag != null)area.getHighlighter().removeHighlight(highlightTag);
+    }
+    public Highlighter getHiglighter()
+    {
+        return highlighter;
     }
 }
