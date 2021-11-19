@@ -59,6 +59,7 @@ public class SearchText extends Area
         {
             public void keyReleased(KeyEvent ke)
             {
+                remove();
                 checkTextArea();
             }
         });
@@ -68,27 +69,34 @@ public class SearchText extends Area
     }
     public void startCheckArea() throws BadLocationException 
     {
+        remove();
         Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter( Color.cyan );
         String textArea = app.getFirst();
         String searchWord = "";
         if(area_search != null) 
         {
-            searchWord = area_search.getText();
+            searchWord = area_search.getText();            
         }
       
         int offset = textArea.indexOf(searchWord); //textarea
-        if(offset == -1) 
+        int length = searchWord.length();
+        if(offset == -1 || searchWord.isEmpty() == true || length == 0) 
         {
             remove();
             return;
         }
-        int length = searchWord.length();
-        while(offset != -1)
+        while(offset != -1 )
         {
             //работает но вылетает ошибка все равно abba a
-            area.getHighlighter().addHighlight(offset, length, painter);
-            offset = textArea.indexOf(searchWord, offset+1);
-            System.out.println("offset - "+offset+1);
+            // System.out.println("offset - "+offset);
+            //крашится потому что lenght = 1 а offset 3
+            area.getHighlighter().addHighlight(offset, offset+length, painter);
+            offset = textArea.indexOf(searchWord, offset+length);
+            // System.out.println("offset - "+offset);
+            if(offset >= textArea.length()) 
+            {
+                break;
+            }
         }
     }
     //он запускает лишь когда кнопка начинает нажимать грубо говоря у меня есть а нажимает б и б ещё не записалась и считает а
