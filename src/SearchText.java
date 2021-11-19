@@ -66,18 +66,29 @@ public class SearchText extends Area
         app.text();
 
     }
-    private void startCheckArea() throws BadLocationException 
+    public void startCheckArea() throws BadLocationException 
     {
         Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter( Color.cyan );
-        area.getHighlighter().removeAllHighlights();
         String textArea = app.getFirst();
-        String searchWord = area_search.getText();
+        String searchWord = "";
+        if(area_search != null) 
+        {
+            searchWord = area_search.getText();
+        }
+      
         int offset = textArea.indexOf(searchWord); //textarea
+        if(offset == -1) 
+        {
+            remove();
+            return;
+        }
         int length = searchWord.length();
         while(offset != -1)
         {
+            //работает но вылетает ошибка все равно abba a
             area.getHighlighter().addHighlight(offset, length, painter);
             offset = textArea.indexOf(searchWord, offset+1);
+            System.out.println("offset - "+offset+1);
         }
     }
     //он запускает лишь когда кнопка начинает нажимать грубо говоря у меня есть а нажимает б и б ещё не записалась и считает а
@@ -96,8 +107,8 @@ public class SearchText extends Area
             }
        }
     }
-    public Highlighter getHiglighter()
+    public void remove()
     {
-        return highlighter;
+        area.getHighlighter().removeAllHighlights();
     }
 }
